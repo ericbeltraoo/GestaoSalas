@@ -1,17 +1,16 @@
 package application;
 
 import entities.Agendamento;
+import entities.enums.IdSalas;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
         Scanner input = new Scanner(System.in);
+        Agendamento agendamento = null;
 
         boolean repetir = true;
 
@@ -30,8 +29,12 @@ public class Main {
                     Random random = new Random();
                     int numeroIdAgendamento = random.nextInt(5000);
                     System.out.println("== ID AGENDAMENTO: "+numeroIdAgendamento+" ==");
-                    System.out.println("Escolha uma das salas disponíveis: ");
-
+                    System.out.println("== Salas da Unidade: ");
+                    System.out.println(Arrays.toString(IdSalas.values()));
+                    System.out.println("Digite uma das salas acima: ");
+                    IdSalas escolhaSala = IdSalas.valueOf(input.nextLine());
+                    System.out.println("");
+                    agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,escolhaSala,));
                     break;
             }
 
