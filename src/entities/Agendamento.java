@@ -5,23 +5,23 @@ import entities.enums.IdSalas;
 import java.time.LocalDateTime;
 
 public class Agendamento {
-    private String id;
+    private int id;
     private IdSalas salaId;
     private LocalDateTime inicio;
     private LocalDateTime fim;
 
-    public Agendamento(String id, IdSalas salaId, LocalDateTime inicio, LocalDateTime fim) {
+    public Agendamento(int id, IdSalas salaId, LocalDateTime inicio, LocalDateTime fim) {
         this.id = id;
         this.salaId = salaId;
         this.inicio = inicio;
         this.fim = fim;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

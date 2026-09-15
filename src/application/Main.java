@@ -4,6 +4,10 @@ import entities.Agendamento;
 import entities.enums.IdSalas;
 import entities.enums.ProgramacaoFuncionamento;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.MonthDay;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Main {
@@ -52,7 +56,10 @@ public class Main {
                         case 8 -> idSalas = IdSalas.SALA_08;
                         case 9 -> idSalas = IdSalas.SALA_09;
                         case 10 -> idSalas = IdSalas.SALA_10;
-                        default -> System.out.println("ERRO: Sala inválida, verifique a lista e escolha uma opção.");
+                        default -> {
+                            System.out.println("ERRO: Sala inválida, verifique a lista e escolha uma opção.");
+                            continue;
+                        }
                     }
 
                     System.out.println("== Dias e Horários: ");
@@ -72,11 +79,27 @@ public class Main {
                         case "QUARTA" -> programacaoFuncionamento = ProgramacaoFuncionamento.QUARTA;
                         case "QUINTA" -> programacaoFuncionamento = ProgramacaoFuncionamento.QUINTA;
                         case "SEXTA" -> programacaoFuncionamento = ProgramacaoFuncionamento.SEXTA;
-                        default -> System.out.println("ERRO: Dia inválido, verifique a lista e escolha uma opção.");
+                        default -> {
+                            System.out.println("ERRO: Dia inválido, verifique a lista e escolha uma opção.");
+                            continue;
+                        }
+                    }
+
+                    Month mesAno = LocalDate.now().getMonth();
+                    List<LocalDate> diasMes = new ArrayList<>();
+                    for(int i = 0; i < mesAno.maxLength();i++) {
+                        LocalDate date = LocalDate.of(2027,mesAno,MonthDay.of(mesAno,i + 1));
+                        diasMes.add(date);
+                    }
+
+                    for(LocalDate dia : diasMes) {
+                        System.out.println(dia);
                     }
 //                    System.out.println("");
-//                    agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,escolhaSala,));
+                    //agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,programacaoFuncionamento.getHoraAbertura().atDate(LocalDate.of()),programacaoFuncionamento.getHoraFechamento()));
                     break;
+                case 4:
+                    repetir = false;
             }
 
 
