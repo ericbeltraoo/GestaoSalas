@@ -4,10 +4,7 @@ import entities.Agendamento;
 import entities.enums.IdSalas;
 import entities.enums.ProgramacaoFuncionamento;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.temporal.ChronoUnit;
+import java.time.*;
 import java.util.*;
 
 public class Main {
@@ -36,8 +33,13 @@ public class Main {
                     int numeroIdAgendamento = random.nextInt(5000);
                     System.out.println("== ID AGENDAMENTO: "+numeroIdAgendamento+" ==");
                     System.out.println("== Salas da Unidade: ");
+                    int contador = 0;
                     for(IdSalas sala : IdSalas.values()) {
                         System.out.print(sala+" | ");
+                        contador++;
+                        if(contador % 3 == 0) {
+                            System.out.println();
+                        }
                     }
                     System.out.println();
 
@@ -62,7 +64,7 @@ public class Main {
                         }
                     }
 
-                    System.out.println("== Dias e Horários: ");
+                    System.out.println("== Dias e Horários de funcionamento: ");
                     System.out.printf("%s, Abertura: %s - Fechamento: %s%n",ProgramacaoFuncionamento.SEGUNDA,ProgramacaoFuncionamento.SEGUNDA.getHoraAbertura(),ProgramacaoFuncionamento.SEGUNDA.getHoraFechamento());
                     System.out.printf("%s, Abertura: %s - Fechamento: %s%n",ProgramacaoFuncionamento.TERCA,ProgramacaoFuncionamento.TERCA.getHoraAbertura(),ProgramacaoFuncionamento.TERCA.getHoraFechamento());
                     System.out.printf("%s, Abertura: %s - Fechamento: %s%n",ProgramacaoFuncionamento.QUARTA,ProgramacaoFuncionamento.QUARTA.getHoraAbertura(),ProgramacaoFuncionamento.QUARTA.getHoraFechamento());
@@ -85,16 +87,48 @@ public class Main {
                         }
                     }
 
-                    Month mesAno = LocalDate.now().getMonth();
+                     // armazena o ano (ex: 2027)
+
+                    // preciso fazer um sistema com o mesmo estilo dos dias para o usuario escolher o mes que ele quer realizar
+                    // o agendamento, so da para fazer no ano de 2026
+                    // falta faze r o switch case do mes e do dia, no final tudo deve ficar um LocalDateTime para colocar na classe
+                    // Agendamento
+                    int ano = LocalDate.now().getYear();
+
+                    List<YearMonth> mesesAno = new ArrayList<>();
+                    System.out.println("== Definição do mes:");
+                    for(int i = 0; i <= 12;i++) {
+                        if(i >= YearMonth.now().getMonthValue()) {
+                            System.out.print(i+" - ");
+                        }
+                    }
+
+                    System.out.println();
+                    System.out.println("Escolha um dos meses disponíveis acima:");
+                    int escolhaMes = input.nextInt();
+                    input.nextLine();
+
+                    Month mesAno = LocalDate.now().getMonth(); // armazena o nome do mes (ex: JANUARY)
+
+
+
                     List<LocalDate> diasMes = new ArrayList<>();
                     for(int i = 0; i < mesAno.maxLength();i++) {
-                        LocalDate date = LocalDate.of(2027,mesAno,MonthDay.of(mesAno,i + 1));
+                        LocalDate date = LocalDate.of(ano,mesAno,i+1);
                         diasMes.add(date);
                     }
 
+                    System.out.println("== Datas Disponíveis:");
                     for(LocalDate dia : diasMes) {
-                        System.out.println(dia);
+                        if(dia.getDayOfWeek().equals(programacaoFuncionamento.getDiaDaSemana())) {
+                            System.out.print(dia.getDayOfMonth()+" - ");
+                            //System.out.println(programacaoFuncionamento.getDiaDaSemana());
+                        }
                     }
+                    System.out.println();
+                    System.out.println("Escolha uma das datas disponíveis acima");
+                    int escolhaData = input.nextInt();
+                    input.nextLine();
 //                    System.out.println("");
                     //agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,programacaoFuncionamento.getHoraAbertura().atDate(LocalDate.of()),programacaoFuncionamento.getHoraFechamento()));
                     break;
