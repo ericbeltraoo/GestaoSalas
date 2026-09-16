@@ -95,10 +95,11 @@ public class Main {
                     // Agendamento
                     int ano = LocalDate.now().getYear();
 
-                    List<YearMonth> mesesAno = new ArrayList<>();
+                    List<Integer> mesesAno = new ArrayList<>();
                     System.out.println("== Definição do mes:");
                     for(int i = 0; i <= 12;i++) {
                         if(i >= YearMonth.now().getMonthValue()) {
+                            mesesAno.add(i);
                             System.out.print(i+" - ");
                         }
                     }
@@ -108,15 +109,38 @@ public class Main {
                     int escolhaMes = input.nextInt();
                     input.nextLine();
 
-                    Month mesAno = LocalDate.now().getMonth(); // armazena o nome do mes (ex: JANUARY)
+
+                    Month mesAno = null; // armazena o nome do mes (ex: JANUARY)
+                    switch (escolhaMes) {
+                        case 1 -> mesAno = Month.JANUARY;
+                        case 2 -> mesAno = Month.FEBRUARY;
+                        case 3 -> mesAno = Month.MARCH;
+                        case 4 -> mesAno = Month.APRIL;
+                        case 5 -> mesAno = Month.MAY;
+                        case 6 -> mesAno = Month.JUNE;
+                        case 7 -> mesAno = Month.JULY;
+                        case 8 -> mesAno = Month.AUGUST;
+                        case 9 -> mesAno = Month.SEPTEMBER;
+                        case 10 -> mesAno = Month.OCTOBER;
+                        case 11 -> mesAno = Month.NOVEMBER;
+                        case 12 -> mesAno = Month.DECEMBER;
+                        default -> {
+                            System.out.println("ERRO: Digite um mês válido.");
+                            continue;
+                        }
+                    }
+
 
 
 
                     List<LocalDate> diasMes = new ArrayList<>();
-                    for(int i = 0; i < mesAno.maxLength();i++) {
-                        LocalDate date = LocalDate.of(ano,mesAno,i+1);
-                        diasMes.add(date);
+                    if(mesesAno != null) {
+                        for(int i = 0; i < mesAno.maxLength();i++) {
+                            LocalDate date = LocalDate.of(ano,mesAno,i+1);
+                            diasMes.add(date);
+                        }
                     }
+
 
                     System.out.println("== Datas Disponíveis:");
                     for(LocalDate dia : diasMes) {
