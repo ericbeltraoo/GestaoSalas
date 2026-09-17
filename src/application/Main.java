@@ -64,6 +64,7 @@ public class Main {
                         }
                     }
 
+                    // reformular para aparecer somente os estao disponiveis para reserva, ex: das 18 as 19, entendeu?
                     System.out.println("== Dias e Horários de funcionamento: ");
                     System.out.printf("%s, Abertura: %s - Fechamento: %s%n",ProgramacaoFuncionamento.SEGUNDA,ProgramacaoFuncionamento.SEGUNDA.getHoraAbertura(),ProgramacaoFuncionamento.SEGUNDA.getHoraFechamento());
                     System.out.printf("%s, Abertura: %s - Fechamento: %s%n",ProgramacaoFuncionamento.TERCA,ProgramacaoFuncionamento.TERCA.getHoraAbertura(),ProgramacaoFuncionamento.TERCA.getHoraFechamento());
@@ -97,7 +98,7 @@ public class Main {
 
                     List<Integer> mesesAno = new ArrayList<>();
                     System.out.println("== Definição do mes:");
-                    for(int i = 0; i <= 12;i++) {
+                    for(int i = 1; i <= 12;i++) {
                         if(i >= YearMonth.now().getMonthValue()) {
                             mesesAno.add(i);
                             System.out.print(i+" - ");
@@ -110,7 +111,7 @@ public class Main {
                     input.nextLine();
 
 
-                    Month mesAno = null; // armazena o nome do mes (ex: JANUARY)
+                    Month mesAno; // armazena o nome do mes (ex: JANUARY)
                     switch (escolhaMes) {
                         case 1 -> mesAno = Month.JANUARY;
                         case 2 -> mesAno = Month.FEBRUARY;
@@ -131,28 +132,42 @@ public class Main {
                     }
 
 
+                    System.out.println("== Datas Disponíveis:");
+                    List<LocalDate> diasTotaisMes = new ArrayList<>();
+                    List<LocalDate> datasDiaSemana = new ArrayList<>(); // Dias somente do dia da semana escolhido
+                    for(int i = 0; i < mesAno.maxLength();i++) {
+                        LocalDate date = LocalDate.of(ano,mesAno,i+1);
+                        diasTotaisMes.add(date);
 
-
-                    List<LocalDate> diasMes = new ArrayList<>();
-                    if(mesesAno != null) {
-                        for(int i = 0; i < mesAno.maxLength();i++) {
-                            LocalDate date = LocalDate.of(ano,mesAno,i+1);
-                            diasMes.add(date);
+                        if(diasTotaisMes.get(i).getDayOfWeek().equals(programacaoFuncionamento.getDiaDaSemana())) {
+                            datasDiaSemana.add(diasTotaisMes.get(i));
                         }
+
                     }
 
-
-                    System.out.println("== Datas Disponíveis:");
-                    for(LocalDate dia : diasMes) {
-                        if(dia.getDayOfWeek().equals(programacaoFuncionamento.getDiaDaSemana())) {
-                            System.out.print(dia.getDayOfMonth()+" - ");
-                            //System.out.println(programacaoFuncionamento.getDiaDaSemana());
-                        }
+                    for(LocalDate x : datasDiaSemana) {
+                        System.out.print(x.getDayOfMonth()+" - ");
                     }
                     System.out.println();
                     System.out.println("Escolha uma das datas disponíveis acima");
                     int escolhaData = input.nextInt();
                     input.nextLine();
+
+                    int diaAgendamento = 0;
+                    for(LocalDate x : datasDiaSemana) {
+                        if(escolhaData == x.getDayOfMonth()) {
+                            diaAgendamento = escolhaData;
+                        }
+                    }
+
+                    if(diaAgendamento == 0) {
+                        System.out.println("ERRO: Digite um dia válido.");
+                        continue;
+                    }
+
+
+                    System.out.println(programacaoFuncionamento.getHoraAbertura());
+                    //LocalDateTime teste = LocalDateTime.of(ano,mesAno,diaAgendamento,programacaoFuncionamento.getHoraAbertura());
 //                    System.out.println("");
                     //agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,programacaoFuncionamento.getHoraAbertura().atDate(LocalDate.of()),programacaoFuncionamento.getHoraFechamento()));
                     break;
