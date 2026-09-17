@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public enum ProgramacaoFuncionamento {
-    SEGUNDA(LocalTime.of(8,0), LocalTime.of(16,0),DayOfWeek.MONDAY),
+    SEGUNDA(LocalTime.of(8,30), LocalTime.of(16,0),DayOfWeek.MONDAY),
     TERCA(LocalTime.of(8,0), LocalTime.of(18,0),DayOfWeek.TUESDAY),
     QUARTA(LocalTime.of(8,0), LocalTime.of(18,0),DayOfWeek.WEDNESDAY),
     QUINTA(LocalTime.of(8,0), LocalTime.of(18,0),DayOfWeek.THURSDAY),
