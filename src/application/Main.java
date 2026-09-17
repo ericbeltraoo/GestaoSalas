@@ -5,12 +5,19 @@ import entities.enums.IdSalas;
 import entities.enums.ProgramacaoFuncionamento;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
+    public static void pausar(Scanner input) {
+        System.out.println("Pressione enter para continuar...");
+        input.nextLine();
+    }
+
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
+        DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("yyyy-MM-dd 'às' HH:mm");
         Scanner input = new Scanner(System.in);
         Agendamento agendamento = null;
         IdSalas idSalas = null;
@@ -32,7 +39,7 @@ public class Main {
                     Random random = new Random();
                     int numeroIdAgendamento = random.nextInt(5000);
                     System.out.println("== ID AGENDAMENTO: "+numeroIdAgendamento+" ==");
-                    System.out.println("== Salas da Unidade: ");
+                    System.out.println("\n== Salas da Unidade: ");
                     int contador = 0;
                     for(IdSalas sala : IdSalas.values()) {
                         System.out.print(sala+" | ");
@@ -60,6 +67,7 @@ public class Main {
                         case 10 -> idSalas = IdSalas.SALA_10;
                         default -> {
                             System.out.println("ERRO: Sala inválida, verifique a lista e escolha uma opção.");
+                            pausar(input);
                             continue;
                         }
                     }
@@ -84,8 +92,52 @@ public class Main {
                         case "SEXTA" -> programacaoFuncionamento = ProgramacaoFuncionamento.SEXTA;
                         default -> {
                             System.out.println("ERRO: Dia inválido, verifique a lista e escolha uma opção.");
+                            pausar(input);
                             continue;
                         }
+                    }
+
+                    // fazer para o usuario escolher o horario dentre o disponivel
+                    System.out.println("== Difinir Horário: ("+diaFuncionamento+")");
+                    System.out.printf("Abertura: %s - Fechamento: %s%n",programacaoFuncionamento.getHoraAbertura(),programacaoFuncionamento.getHoraFechamento());
+                    System.out.println("Escolha o horário para a reserva: (ex: Inicio: 09:00 | Fim: 15:00 )");
+                    System.out.println("Digite o horário de início: ");
+                    String inicio = input.nextLine();
+                    LocalTime horarioInicio = LocalTime.parse(inicio);
+                    System.out.println("Digite o horário final: ");
+                    String fim = input.nextLine();
+                    LocalTime horarioFinal = LocalTime.parse(fim);
+
+
+                    boolean horarioInicialPermitido = false;
+                    boolean horarioFinalPermitido = false;
+
+                    if(horarioInicio.getHour() >= programacaoFuncionamento.getHoraAbertura().getHour()) {
+                        horarioInicialPermitido = true;
+
+                        if(horarioInicio.getHour() == programacaoFuncionamento.getHoraAbertura().getHour()) {
+                            System.out.println("passou hora igual");
+                            if(!(horarioInicio.getMinute() >= programacaoFuncionamento.getHoraAbertura().getMinute())) {
+                                horarioInicialPermitido = false;
+                            }
+                        }
+
+
+
+                        if(horarioFinal.getHour() < programacaoFuncionamento.getHoraFechamento().getHour()) {
+                            horarioFinalPermitido = true;
+                        }
+
+                    }
+
+                    System.out.println(horarioInicialPermitido);
+                    System.out.println(horarioFinalPermitido);
+                    if(!horarioInicialPermitido) {
+                        System.out.println("ERRO: Digite um horário inicial válido.");
+                        continue;
+                    } else if(!horarioFinalPermitido) {
+                        System.out.println("ERRO: Digite um horário final válido.");
+                        continue;
                     }
 
                      // armazena o ano (ex: 2027)
@@ -148,6 +200,7 @@ public class Main {
                     for(LocalDate x : datasDiaSemana) {
                         System.out.print(x.getDayOfMonth()+" - ");
                     }
+
                     System.out.println();
                     System.out.println("Escolha uma das datas disponíveis acima");
                     int escolhaData = input.nextInt();
@@ -167,12 +220,28 @@ public class Main {
 
 
                     System.out.println(programacaoFuncionamento.getHoraAbertura());
-                    //LocalDateTime teste = LocalDateTime.of(ano,mesAno,diaAgendamento,programacaoFuncionamento.getHoraAbertura());
+                    // o usuario precisa escolher o horario da consulta, pra isso eu preciso mudar la em cima
+                    LocalDateTime hrInicio = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioInicio);
+                    LocalDateTime hrFim = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioFinal);
 //                    System.out.println("");
-                    //agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,programacaoFuncionamento.getHoraAbertura().atDate(LocalDate.of()),programacaoFuncionamento.getHoraFechamento()));
+                    agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,hrInicio,hrFim));
+                    break;
+                case 3:
+                    if(agendamentos.isEmpty()) {
+                        System.out.println("ERRO: Nenhum agendamento disponível.");
+                        pausar(input);
+                        continue;
+                    }
+                    for(Agendamento x : agendamentos) {
+                        System.out.println(x.getId()+" | "+x.getSalaId()+" | "+x.getInicio().format(frmtBr)+" | "+x.getFim().format(frmtBr));
+                        pausar(input);
+                    }
                     break;
                 case 4:
                     repetir = false;
+                default:
+                    System.out.println("ERRO: Digite uma opção válida.");
+                    pausar(input);
             }
 
 
