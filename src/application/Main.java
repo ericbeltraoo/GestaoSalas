@@ -8,6 +8,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static service.AgendamentoService.TEMPO_MINIMO_RESERVA;
+
 public class Main {
     public static void pausar(Scanner input) {
         System.out.println("Pressione enter para continuar...");
@@ -17,7 +19,9 @@ public class Main {
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
-        DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("yyyy-MM-dd 'às' HH:mm");
+        DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+        DateTimeFormatter frmtDia = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter frmtTempo = DateTimeFormatter.ofPattern("HH:mm");
         Scanner input = new Scanner(System.in);
         Agendamento agendamento = null;
         IdSalas idSalas = null;
@@ -101,6 +105,7 @@ public class Main {
                     System.out.println("== Difinir Horário: ("+diaFuncionamento+")");
                     System.out.printf("Abertura: %s - Fechamento: %s%n",programacaoFuncionamento.getHoraAbertura(),programacaoFuncionamento.getHoraFechamento());
                     System.out.println("Escolha o horário para a reserva: (ex: Inicio: 09:00 | Fim: 15:00 )");
+                    System.out.println("LEMBRETE: O tempo mínimo para uma reserva é de 30 minutos.");
                     System.out.println("Digite o horário de início: ");
                     String inicio = input.nextLine();
                     LocalTime horarioInicio = LocalTime.parse(inicio);
@@ -109,9 +114,17 @@ public class Main {
                     LocalTime horarioFinal = LocalTime.parse(fim);
 
 
+                    // verifica a duração entre o horario de inicio e final
+                    if(!(Duration.between(horarioInicio,horarioFinal).toMinutes() >= TEMPO_MINIMO_RESERVA )) {
+                        System.out.println("ERRO: O tempo mínimo para reservar uma sala é de 30 minutos.");
+                        pausar(input);
+                        continue;
+                    }
+
                     boolean horarioInicialPermitido = false;
                     boolean horarioFinalPermitido = false;
 
+                    // verificação do horario inicial
                     if(horarioInicio.getHour() >= programacaoFuncionamento.getHoraAbertura().getHour()) {
                         horarioInicialPermitido = true;
 
@@ -122,12 +135,11 @@ public class Main {
                             }
                         }
 
+                    }
 
-
-                        if(horarioFinal.getHour() < programacaoFuncionamento.getHoraFechamento().getHour()) {
-                            horarioFinalPermitido = true;
-                        }
-
+                    // verificação do horario final
+                    if(horarioFinal.getHour() < programacaoFuncionamento.getHoraFechamento().getHour()) {
+                        horarioFinalPermitido = true;
                     }
 
                     System.out.println(horarioInicialPermitido);
@@ -140,12 +152,6 @@ public class Main {
                         continue;
                     }
 
-                     // armazena o ano (ex: 2027)
-
-                    // preciso fazer um sistema com o mesmo estilo dos dias para o usuario escolher o mes que ele quer realizar
-                    // o agendamento, so da para fazer no ano de 2026
-                    // falta faze r o switch case do mes e do dia, no final tudo deve ficar um LocalDateTime para colocar na classe
-                    // Agendamento
                     int ano = LocalDate.now().getYear();
 
                     List<Integer> mesesAno = new ArrayList<>();
@@ -218,27 +224,33 @@ public class Main {
                         continue;
                     }
 
-
-                    System.out.println(programacaoFuncionamento.getHoraAbertura());
-                    // o usuario precisa escolher o horario da consulta, pra isso eu preciso mudar la em cima
                     LocalDateTime hrInicio = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioInicio);
                     LocalDateTime hrFim = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioFinal);
-//                    System.out.println("");
                     agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,hrInicio,hrFim));
                     break;
+                case 2:
+                    // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
+                    // e pergunta se quer mesmo cancelar, se nao achar gera erro
+                    break;
                 case 3:
+
+                    // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
+                    // se nao achar gera erro
                     if(agendamentos.isEmpty()) {
                         System.out.println("ERRO: Nenhum agendamento disponível.");
                         pausar(input);
                         continue;
                     }
+                    System.out.println("=== AGENDAMENTOS ===");
                     for(Agendamento x : agendamentos) {
-                        System.out.println(x.getId()+" | "+x.getSalaId()+" | "+x.getInicio().format(frmtBr)+" | "+x.getFim().format(frmtBr));
-                        pausar(input);
+                        System.out.println("ID: "+x.getId()+"\n"+x.getSalaId()+"\nDia: "+x.getInicio().format(frmtDia)+"\nHorário: "+x.getInicio().format(frmtTempo)+" às "+x.getFim().format(frmtTempo));
+                        System.out.println("----------------------------");
                     }
+                    pausar(input);
                     break;
                 case 4:
                     repetir = false;
+                    pausar(input);
                 default:
                     System.out.println("ERRO: Digite uma opção válida.");
                     pausar(input);
