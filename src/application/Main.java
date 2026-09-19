@@ -16,6 +16,16 @@ public class Main {
         input.nextLine();
     }
 
+    public static boolean verificarPreenchimentoAgendamento(List<Agendamento> agendamentos , Scanner input) {
+        if(agendamentos.isEmpty()) {
+            System.out.println("ERRO: Nenhum agendamento disponível.");
+            pausar(input);
+            return true; // true para repetir
+        } else {
+            return false; // false = tem agendamento
+        }
+    }
+
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
@@ -33,7 +43,8 @@ public class Main {
             System.out.println("1 - Fazer um Agendamento");
             System.out.println("2 - Cancelar um Agendamento");
             System.out.println("3 - Verificar um Agendamento");
-            System.out.println("4 - Fechar Menu");
+            System.out.println("4 - Verificar todos os Agendamentos");
+            System.out.println("5 - Fechar Menu");
             System.out.println("Escolha uma das opções a cima:");
             int escolhaMenu = input.nextInt();
             input.nextLine();
@@ -231,16 +242,95 @@ public class Main {
                 case 2:
                     // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
                     // e pergunta se quer mesmo cancelar, se nao achar gera erro
+
+                    if(verificarPreenchimentoAgendamento(agendamentos,input)) {
+                        continue;
+                    }
+
+                    System.out.println("Digite o ID do Agendamento: ");
+                    int idDigitado = input.nextInt();
+                    input.nextLine();
+
+                    boolean agendamentoEncontrado = false;
+
+                    for(Agendamento x : agendamentos) {
+                        if(x.getId() == idDigitado) {
+                            System.out.printf("=== Agendamento %d ===%n",x.getId());
+                            System.out.println("ID: "+x.getId()+"\n"+x.getSalaId()+"\nDia: "+x.getInicio().format(frmtDia)+"\nHorário: "+x.getInicio().format(frmtTempo)+" às "+x.getFim().format(frmtTempo));
+                            System.out.println("----------------------------");
+                            System.out.println("Você deseja cancelar o agendamento descrito acima?");
+                            System.out.println("1 - Sim, desejo cancelar");
+                            System.out.println("2 - Não desejo cancelar");
+                            int escolhaCancelamento = input.nextInt();
+                            input.nextLine();
+
+                            switch (escolhaCancelamento) {
+                                case 1 -> {
+                                    agendamentos.remove(x);
+                                    System.out.println("Cancelamento efetuado com sucesso!");
+                                    pausar(input);
+                                }
+                                case 2 -> {
+                                    System.out.println("Redirecionando...");
+                                    pausar(input);
+                                }
+                                default -> {
+                                    System.out.println("ERRO: Digite uma opção válida.");
+                                    pausar(input);
+                                    continue;
+                                }
+                            }
+                            agendamentoEncontrado = true;
+                            break;
+                        }
+                    }
+
+                    if(!agendamentoEncontrado) {
+                        System.out.println("ERRO: Nenhum agendamento encontrado para o ID: "+idDigitado);
+                        pausar(input);
+                        continue;
+                    }
                     break;
                 case 3:
 
                     // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
                     // se nao achar gera erro
-                    if(agendamentos.isEmpty()) {
-                        System.out.println("ERRO: Nenhum agendamento disponível.");
+                    if(verificarPreenchimentoAgendamento(agendamentos,input)) {
+                        continue;
+                    }
+
+                    System.out.println("Digite o ID do Agendamento: ");
+                    int idDigitadoAgendamentoEspecifico = input.nextInt();
+                    input.nextLine();
+
+                    boolean agendamentoEncontrado2 = false;
+
+                    for(Agendamento x : agendamentos) {
+                        if(x.getId() == idDigitadoAgendamentoEspecifico) {
+                            System.out.printf("=== Agendamento %d ===%n",x.getId());
+
+                            System.out.println("ID: "+x.getId()+"\n"+x.getSalaId()+"\nDia: "+x.getInicio().format(frmtDia)+"\nHorário: "+x.getInicio().format(frmtTempo)+" às "+x.getFim().format(frmtTempo));
+                            System.out.println("----------------------------");
+
+                            agendamentoEncontrado2 = true;
+                            pausar(input);
+                            break;
+
+                        }
+                    }
+
+                    if(!agendamentoEncontrado2) {
+                        System.out.println("ERRO: Nenhum agendamento encontrado para o ID: "+idDigitadoAgendamentoEspecifico);
                         pausar(input);
                         continue;
                     }
+                    break;
+
+                case 4:
+                    if(verificarPreenchimentoAgendamento(agendamentos,input)) {
+                        continue;
+                    }
+
                     System.out.println("=== AGENDAMENTOS ===");
                     for(Agendamento x : agendamentos) {
                         System.out.println("ID: "+x.getId()+"\n"+x.getSalaId()+"\nDia: "+x.getInicio().format(frmtDia)+"\nHorário: "+x.getInicio().format(frmtTempo)+" às "+x.getFim().format(frmtTempo));
@@ -248,9 +338,11 @@ public class Main {
                     }
                     pausar(input);
                     break;
-                case 4:
+                case 5:
                     repetir = false;
+                    System.out.println("Finalizando...");
                     pausar(input);
+                    break;
                 default:
                     System.out.println("ERRO: Digite uma opção válida.");
                     pausar(input);
