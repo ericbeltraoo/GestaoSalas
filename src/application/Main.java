@@ -3,6 +3,7 @@ package application;
 import entities.Agendamento;
 import entities.enums.IdSalas;
 import entities.enums.ProgramacaoFuncionamento;
+import service.AgendamentoService;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -29,12 +30,14 @@ public class Main {
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
+        AgendamentoService agendamentoService = new AgendamentoService();
         DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
         DateTimeFormatter frmtDia = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter frmtTempo = DateTimeFormatter.ofPattern("HH:mm");
         Scanner input = new Scanner(System.in);
         Agendamento agendamento = null;
         IdSalas idSalas = null;
+        IdSalas idSalas2 = null;
 
         boolean repetir = true;
 
@@ -44,7 +47,8 @@ public class Main {
             System.out.println("2 - Cancelar um Agendamento");
             System.out.println("3 - Verificar um Agendamento");
             System.out.println("4 - Verificar todos os Agendamentos");
-            System.out.println("5 - Fechar Menu");
+            System.out.println("5 - Verificar a duração de todos os agendamentos de uma Sala");
+            System.out.println("6 - Fechar Menu");
             System.out.println("Escolha uma das opções a cima:");
             int escolhaMenu = input.nextInt();
             input.nextLine();
@@ -339,6 +343,47 @@ public class Main {
                     pausar(input);
                     break;
                 case 5:
+                    if(!agendamentos.isEmpty()) {
+                        System.out.println("\n== Salas da Unidade: ");
+                        contador = 0;
+                        for(IdSalas sala : IdSalas.values()) {
+                            System.out.print(sala+" | ");
+                            contador++;
+                            if(contador % 3 == 0) {
+                                System.out.println();
+                            }
+                        }
+                        System.out.println();
+
+                        System.out.println("Digite a sala desejada: ");
+                        int numeracaoSalaDesejada = input.nextInt();
+                        input.nextLine();
+
+                        switch (numeracaoSalaDesejada) {
+                            case 1 -> idSalas2 = IdSalas.SALA_01;
+                            case 2 -> idSalas2 = IdSalas.SALA_02;
+                            case 3 -> idSalas2 = IdSalas.SALA_03;
+                            case 4 -> idSalas2 = IdSalas.SALA_04;
+                            case 5 -> idSalas2 = IdSalas.SALA_05;
+                            case 6 -> idSalas2 = IdSalas.SALA_06;
+                            case 7 -> idSalas2 = IdSalas.SALA_07;
+                            case 8 -> idSalas2 = IdSalas.SALA_08;
+                            case 9 -> idSalas2 = IdSalas.SALA_09;
+                            case 10 -> idSalas2 = IdSalas.SALA_10;
+                            default -> {
+                                System.out.println("ERRO: Sala inválida, verifique a lista e escolha uma opção.");
+                                pausar(input);
+                                continue;
+                            }
+                        }
+                        System.out.println("Duração: "+agendamentoService.calcularHorasTotaisFormatadas(agendamentos,idSalas2)+" minutos.");
+                        pausar(input);
+                    } else {
+                        System.out.println("ERRO: Nenhum agendamento foi realizado.");
+                        pausar(input);
+                    }
+                    break;
+                case 6:
                     repetir = false;
                     System.out.println("Finalizando...");
                     pausar(input);
