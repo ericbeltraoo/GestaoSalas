@@ -1,0 +1,1 @@
+- Modificar na listagem das salas para aparecer somente os dias e horários disponíveis, pois atualmente aparecem todos os horários, mesmo aquele horário estando ocupado. Para realizar essa função, o usuario precisaria inserir a data antes de mostrar os horários, fazendo com que o sistema consiga realizar as vetrificações necessárias.

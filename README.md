@@ -1,6 +1,6 @@
 # Gestão de Agendamentos de Salas Corporativas
 
-Sistema de gerenciamento de agendamentos de salas corporativas desenvolvido em Java. Este projeto é um back-end em desenvolvimento contínuo, onde novas funcionalidades e melhorias são implementadas diariamente como parte do processo de aprendizado.
+Sistema de gerenciamento de agendamentos de salas corporativas desenvolvido em Java. Este é um projeto back-end completo com funcionalidades de agendamento, cancelamento e consulta de reservas, incluindo validação de conflitos de horário e relatórios de utilização de salas.
 
 ## 📋 Descrição
 
@@ -8,10 +8,13 @@ O sistema permite o gerenciamento de reservas de salas corporativas através de 
 
 ## 🚀 Funcionalidades
 
-- **Agendamento de Salas**: Reserva de salas com validação de horários e datas
-- **Visualização de Agendamentos**: Listagem de todos os agendamentos realizados
-- **Cancelamento de Agendamentos**: (Em desenvolvimento)
+- **Agendamento de Salas**: Reserva de salas com validação de horários, datas e conflitos
+- **Cancelamento de Agendamentos**: Cancelamento de reservas com confirmação do usuário
+- **Verificação de Agendamento Específico**: Busca de agendamento por ID
+- **Listagem de Todos os Agendamentos**: Visualização completa de todas as reservas
+- **Relatório de Utilização por Sala**: Cálculo do tempo total de uso de uma sala específica
 - **Validação de Horários**: Verificação de horários dentro do período de funcionamento
+- **Validação de Conflitos**: Impede agendamentos sobrepostos na mesma sala
 - **Múltiplas Salas**: 10 salas disponíveis com diferentes tipos (Auditório, Sala de Reunião, Sala de Estudos, etc.)
 - **Programação Semanal**: Horários de funcionamento diferenciados por dia da semana
 
@@ -72,13 +75,23 @@ Ao executar a aplicação, você verá um menu com as seguintes opções:
    - Selecione o dia da semana (Segunda a Sexta)
    - Defina o horário de início e fim (mínimo 30 minutos)
    - Escolha a data específica dentro do mês
+   - O sistema valida automaticamente conflitos com agendamentos existentes
 
-2. **Cancelar um Agendamento**: (Em desenvolvimento)
+2. **Cancelar um Agendamento**: 
+   - Digite o ID do agendamento
+   - Confirme o cancelamento após visualizar os detalhes
 
 3. **Verificar um Agendamento**: 
+   - Digite o ID do agendamento para visualizar detalhes específicos
+
+4. **Verificar todos os Agendamentos**: 
    - Visualize todos os agendamentos realizados com detalhes
 
-4. **Fechar Menu**: Encerra a aplicação
+5. **Verificar a duração de todos os agendamentos de uma Sala**: 
+   - Escolha uma sala específica
+   - Visualize o tempo total de utilização em minutos
+
+6. **Fechar Menu**: Encerra a aplicação
 
 ## 🏢 Salas Disponíveis
 
@@ -103,21 +116,26 @@ Ao executar a aplicação, você verá um menu com as seguintes opções:
 
 ## 🚧 Status do Projeto
 
-Este projeto está em desenvolvimento ativo. Funcionalidades estão sendo adicionadas e melhoradas continuamente.
+Este projeto está em fase de revisão final, com todas as funcionalidades principais implementadas e funcionando.
 
 ### Funcionalidades Implementadas
-- ✅ Menu interativo
-- ✅ Seleção de salas
+- ✅ Menu interativo com 6 opções
+- ✅ Seleção de salas (10 salas disponíveis)
 - ✅ Validação de horários de funcionamento
 - ✅ Validação de tempo mínimo de reserva (30 minutos)
-- ✅ Seleção de datas e meses
-- ✅ Listagem de agendamentos
+- ✅ Seleção de datas e meses dinâmicos
+- ✅ Cancelamento de agendamentos com confirmação
+- ✅ Verificação de agendamento específico por ID
+- ✅ Listagem completa de agendamentos
+- ✅ Validação de conflitos de horário
+- ✅ Relatório de utilização por sala
+- ✅ Funções auxiliares (verificação de preenchimento, listagem de salas)
 
-### Funcionalidades em Desenvolvimento
-- 🚧 Cancelamento de agendamentos
-- 🚧 Verificação de disponibilidade de salas em horários específicos
-- 🚧 Persistência de dados
-- 🚧 Validação de conflitos de horário
+### Próximas Melhorias (Futuras)
+- 📋 Persistência de dados (banco de dados ou arquivos)
+- 📋 Interface gráfica (GUI)
+- 📋 Autenticação de usuários
+- 📋 Relatórios mais detalhados
 
 ## 📝 Regras de Negócio
 
@@ -125,16 +143,20 @@ Este projeto está em desenvolvimento ativo. Funcionalidades estão sendo adicio
 - Agendamentos devem estar dentro do horário de funcionamento do dia escolhido
 - Cada agendamento recebe um ID único gerado aleatoriamente
 - Apenas dias úteis (Segunda a Sexta) estão disponíveis para agendamento
+- Não é permitido agendar a mesma sala em horários sobrepostos
+- O sistema valida automaticamente conflitos antes de confirmar a reserva
 
 ## 👨‍💻 Desenvolvimento
 
 Este projeto serve como ambiente de aprendizado e prática de conceitos de programação Java, incluindo:
 - Programação orientada a objetos
 - Enums (enumerações)
-- Manipulação de datas e horários
+- Manipulação de datas e horários com Java Time API
 - Collections (List, ArrayList)
-- Interface de linha de comando
+- Interface de linha de comando (CLI)
 - Validação de entrada de dados
+- Lógica de negócio em camadas (Service Layer)
+- Algoritmos de verificação de conflitos
 
 ## 📄 Licença
 
