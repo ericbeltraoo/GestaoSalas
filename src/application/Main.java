@@ -27,11 +27,24 @@ public class Main {
         }
     }
 
+    public static void listarSalasDisponiveis(int contador) {
+        System.out.println("\n== Salas da Unidade: ");
+        contador = 0;
+        for(IdSalas sala : IdSalas.values()) {
+            System.out.print(sala+" | ");
+            contador++;
+            if(contador % 3 == 0) {
+                System.out.println();
+            }
+        }
+        System.out.println();
+    }
+
     public static void main(String[] args) {
 
         List<Agendamento> agendamentos = new ArrayList<>();
         AgendamentoService agendamentoService = new AgendamentoService();
-        DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+        //DateTimeFormatter frmtBr = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
         DateTimeFormatter frmtDia = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter frmtTempo = DateTimeFormatter.ofPattern("HH:mm");
         Scanner input = new Scanner(System.in);
@@ -58,16 +71,10 @@ public class Main {
                     Random random = new Random();
                     int numeroIdAgendamento = random.nextInt(5000);
                     System.out.println("== ID AGENDAMENTO: "+numeroIdAgendamento+" ==");
-                    System.out.println("\n== Salas da Unidade: ");
                     int contador = 0;
-                    for(IdSalas sala : IdSalas.values()) {
-                        System.out.print(sala+" | ");
-                        contador++;
-                        if(contador % 3 == 0) {
-                            System.out.println();
-                        }
-                    }
-                    System.out.println();
+
+                    // lista as salas da unidade
+                    listarSalasDisponiveis(contador);
 
                     System.out.println("Digite a numeração de uma das salas acima: ");
                     int numeracaoSala = input.nextInt();
@@ -167,6 +174,8 @@ public class Main {
                         continue;
                     }
 
+
+                    // parte da data começa aqui
                     int ano = LocalDate.now().getYear();
 
                     List<Integer> mesesAno = new ArrayList<>();
@@ -241,11 +250,20 @@ public class Main {
 
                     LocalDateTime hrInicio = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioInicio);
                     LocalDateTime hrFim = LocalDateTime.of(LocalDate.of(ano,mesAno,diaAgendamento),horarioFinal);
-                    agendamentos.add(agendamento = new Agendamento(numeroIdAgendamento,idSalas,hrInicio,hrFim));
+
+                    agendamento = new Agendamento(numeroIdAgendamento,idSalas,hrInicio,hrFim);
+
+                    if(agendamentoService.possuiConflito(agendamentos,agendamento)) {
+                        System.out.println("ERRO: A sala selecionada ja esta reservada nesse horário e dia.");
+                        pausar(input);
+                        continue;
+                    } else {
+                        System.out.println("Agendamento realizado com sucesso!");
+                        pausar(input);
+                        agendamentos.add(agendamento);
+                    }
                     break;
                 case 2:
-                    // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
-                    // e pergunta se quer mesmo cancelar, se nao achar gera erro
 
                     if(verificarPreenchimentoAgendamento(agendamentos,input)) {
                         continue;
@@ -297,8 +315,6 @@ public class Main {
                     break;
                 case 3:
 
-                    // criar um sistema de o usuario colocar o id do agendamento e procurar na lista, se achar mostra
-                    // se nao achar gera erro
                     if(verificarPreenchimentoAgendamento(agendamentos,input)) {
                         continue;
                     }
@@ -344,16 +360,8 @@ public class Main {
                     break;
                 case 5:
                     if(!agendamentos.isEmpty()) {
-                        System.out.println("\n== Salas da Unidade: ");
                         contador = 0;
-                        for(IdSalas sala : IdSalas.values()) {
-                            System.out.print(sala+" | ");
-                            contador++;
-                            if(contador % 3 == 0) {
-                                System.out.println();
-                            }
-                        }
-                        System.out.println();
+                        listarSalasDisponiveis(contador);
 
                         System.out.println("Digite a sala desejada: ");
                         int numeracaoSalaDesejada = input.nextInt();
